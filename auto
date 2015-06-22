@@ -1,0 +1,132 @@
+#!/bin/bash
+
+# Automation for Simple Salt Keys
+# Chris Arroyo
+
+
+x=1
+
+# Beginning option functions
+
+function optmaster(){
+	clear
+	echo "restart or status?"
+	read rors
+
+	case $rors in
+	restart) service salt-master restart
+	sleep 2
+	;;
+	status) service salt-master status
+	sleep 2
+	;;
+	esac
+}
+
+function optminion(){
+	clear
+	echo "restart or status?"
+	read RorS
+
+	case $RorS in
+	restart) service salt-minion restart
+	sleep 2
+	;;
+	status) service salt-minion status
+	sleep 2
+	;;
+	esac
+}
+
+function opttest(){
+	clear
+	echo "test all? test one?"
+	read testing
+
+	case $testing in
+	all) salt \* test.ping
+	sleep 2
+	;;
+	one) echo "which one?"
+	read testone
+	salt $testone test.ping
+	;;
+	esac 
+}
+
+function optadd(){
+	clear
+	echo "which would you like to add? or add all"
+	read adding
+
+	case $adding in
+	$adding) salt-key -a $adding
+	sleep 2
+	;;
+	all) salt-key -A
+	sleep 2
+	;;
+	esac
+}
+
+function optremove(){
+	clear
+	echo "Which would you like to remove? or remove all"
+	read removing
+
+	case $removing in
+	$removing) salt-key -d $removing
+	sleep 2
+	;;
+	all) salt-key -D
+	sleep 2
+	;;
+	esac
+}
+
+function optkey(){
+	clear
+	salt-key -L
+	sleep 2
+}
+
+function optout(){
+	clear
+	echo "GoodBye..."
+	x=2
+}
+
+
+# beggining options
+
+while [ $x = 1 ]
+do
+	clear
+	echo "master or minion? salt-key? test? add? remove? out.."
+	read morm
+
+	case $morm in
+	master)
+	optmaster
+	;;
+	minion)
+	optminion
+	sleep 2
+	;;
+	test)
+	opttest
+	;;
+	add)
+	optadd
+	;;
+	remove)
+	optremove
+	;;
+	key)
+	optkey
+	;;
+	out)
+	optout
+	;;
+	esac
+done
